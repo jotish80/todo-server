@@ -7,8 +7,8 @@ const app = express();
 
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(result => console.log('Mongodb connected successfully'))
-  .catch(err => console.log('Error => ', err));
+  .then(result => console.log('==> Mongodb connected successfully'))
+  .catch(err => console.log('Error ==> ', err));
 
 app.use(cors());
 app.use(express.json());
@@ -16,7 +16,8 @@ app.use(express.json());
 app.get('/:email', async (req, res) => {
   try {
     const tasks = await Task.find({ email: req.params.email });
-    res.send(tasks);
+    const uncompletedTasks = tasks.filter(task => task.isCompleted == false);
+    res.send(uncompletedTasks);
   } catch (err) {
     console.log(err);
     res.send(err);
@@ -80,5 +81,5 @@ app.get('/completedTasks/:email', async (req, res) => {
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log('Server is running at port = ' + port);
+  console.log('==> Server is running at port = ' + port);
 });
